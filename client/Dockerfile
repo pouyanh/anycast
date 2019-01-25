@@ -1,6 +1,6 @@
 FROM golang:latest as builder
 
-ARG PROJECT_NAME=driver
+ARG PROJECT_NAME=client
 ARG PROJECT_NAMESPACE=github.com/pouyanh/anycast
 
 WORKDIR $GOPATH/src/$PROJECT_NAMESPACE/$PROJECT_NAME
@@ -12,7 +12,7 @@ RUN GOOS=linux GOARCH=amd64 CGO_ENABLED=0 \
 FROM alpine:latest
 MAINTAINER Pouyan Heyratpour <pouyan@janstun.com>
 
-ARG PROJECT_NAME=driver
+ARG PROJECT_NAME=client
 
 # Copy compiled binaries and modules
 COPY --from=builder /build/$PROJECT_NAME /app/main

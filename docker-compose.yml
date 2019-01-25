@@ -76,32 +76,32 @@ services:
     environment:
       HOSTNAME: nats.race
 
-  transportation:
+  brain:
     scale: 5
     build:
-      context: ./transportation
+      context: ./brain
       dockerfile: Dockerfile-dev
     image: registry.janstun.com/library/golang:develop
-    working_dir: /go/src/github.com/pouyanh/anycast/transportation
+    working_dir: /go/src/github.com/pouyanh/anycast/brain
     volumes:
-    - ./app:/go/src/github.com/pouyanh/anycast/transportation
+    - ./app:/go/src/github.com/pouyanh/anycast/brain
 
-  passenger:
+  client:
     scale: 5
     build:
-      context: ./passenger
+      context: ./client
       dockerfile: Dockerfile-dev
     image: registry.janstun.com/library/golang:develop
-    working_dir: /go/src/github.com/pouyanh/anycast/passenger
+    working_dir: /go/src/github.com/pouyanh/anycast/client
     volumes:
-    - ./app:/go/src/github.com/pouyanh/anycast/passenger
+    - ./app:/go/src/github.com/pouyanh/anycast/client
 
-  driver:
+  servant:
     scale: 5
     build:
-      context: ./driver
+      context: ./servant
       dockerfile: Dockerfile-dev
     image: registry.janstun.com/library/golang:develop
-    working_dir: /go/src/github.com/pouyanh/anycast/driver
+    working_dir: /go/src/github.com/pouyanh/anycast/servant
     volumes:
-    - ./app:/go/src/github.com/pouyanh/anycast/driver
+    - ./app:/go/src/github.com/pouyanh/anycast/servant
