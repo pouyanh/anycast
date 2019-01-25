@@ -119,13 +119,7 @@ func (h *handler) Decrease(count int) error {
 }
 
 func (h *handler) Unregister() error {
-	defer close(h.chstop)
-
-	h.Decrease(int(atomic.LoadInt32(&h.count)))
-
-	if c := atomic.LoadInt32(&h.count); 0 != c {
-		return fmt.Errorf("%d workers have not been stoped", c)
-	}
+	close(h.chstop)
 
 	return nil
 }
