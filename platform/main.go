@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/pouyanh/anycast/lib/infrastructure/logrus"
 	"os"
 	"fmt"
 	"flag"
@@ -76,6 +77,12 @@ func setupInfrastructure() (*infrastructure.Services, error) {
 		return nil, err
 	} else {
 		services.KeyValueStorage = v
+	}
+
+	if v, err := logrus.NewLevelledLogger(infrastructure.DEBUG); nil != err {
+		return nil, err
+	} else {
+		services.LevelledLogger = v
 	}
 
 	return services, nil

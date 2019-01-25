@@ -33,7 +33,7 @@ func (a *Application) Start() error {
 }
 
 func (a *Application) Stop() error {
-	fmt.Println("SOS is going to be stopped")
+	a.Services.LevelledLogger.Log(infrastructure.INFO, "SOS is going to be stopped")
 
 	for _, h := range a.handlers {
 		if err := h.Unregister(); nil != err {
@@ -43,12 +43,16 @@ func (a *Application) Stop() error {
 
 	a.wg.Wait()
 
-	fmt.Println("SOS stopped")
+	a.Services.LevelledLogger.Log(infrastructure.INFO, "SOS has been stopped")
 
 	return nil
 }
 
 func (a Application) check() error {
+	if nil == a.Services.LevelledLogger {
+		return fmt.Errorf("no levelled logger service has been registered")
+	}
+
 	if nil == a.Services.KeyValueStorage {
 		return fmt.Errorf("no key/value storage service has been registered")
 	}
