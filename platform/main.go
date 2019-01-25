@@ -1,13 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 
+	"github.com/pouyanh/anycast/lib/application"
 	"github.com/pouyanh/anycast/lib/infrastructure"
 	"github.com/pouyanh/anycast/lib/infrastructure/nats"
 	"github.com/pouyanh/anycast/lib/infrastructure/redis"
-
 	"github.com/pouyanh/anycast/platform/application/sos"
 )
 
@@ -34,9 +37,12 @@ func main() {
 	}
 
 	// Create the application
-	sosApp := sos.Application{
+	sosApp := &sos.Application{
 		Services: *services,
 	}
+
+	// Handle shutdown
+	handleShutdown(sosApp)
 
 	// Run the application
 	if err := sosApp.Start(); nil != err {
@@ -73,4 +79,23 @@ func setupInfrastructure() (*infrastructure.Services, error) {
 	}
 
 	return services, nil
+}
+
+func handleShutdown(apps ...application.Application) {
+	gracefulStop := make(chan os.Signal)
+	signal.Notify(gracefulStop, syscall.SIGTERM)
+	signal.Notify(gracefulStop, syscall.SIGINT)
+
+	go func() {
+		sig := <-gracefulStop
+		fmt.Printf("caught sig: %+v", sig)
+
+		for _, app := range apps {
+			if err := app.Stop(); nil != err {
+				os.Exit(1)
+			}
+		}
+
+		os.Exit(0)
+	}()
 }

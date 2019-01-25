@@ -29,7 +29,7 @@ func (s messaging) Publish(topic string, reply string, data []byte) error {
 	})
 }
 
-func (s *messaging) Subscribe(topic string) (chan infrastructure.Message, error) {
+func (s *messaging) Subscribe(topic string) (<-chan infrastructure.Message, error) {
 	if nil == s.chsubs {
 		s.chsubs = make(chan *nats.Subscription)
 		s.subs = make(map[string]*nats.Subscription)

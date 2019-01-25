@@ -11,7 +11,7 @@ type Message struct {
 // Message Queue - Publish Subscribe service
 type PubSubMessaging interface {
 	Publish(topic string, reply string, data []byte) error
-	Subscribe(topic string) (chan Message, error)
+	Subscribe(topic string) (<-chan Message, error)
 	Unsubscribe(topic string) error
 }
 
