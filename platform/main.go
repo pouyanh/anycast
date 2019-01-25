@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"flag"
 
 	"github.com/pouyanh/anycast/lib/infrastructure"
@@ -17,12 +18,6 @@ var (
 	CfgRedisAddress string
 )
 
-var (
-	PubSubMessaging infrastructure.PubSubMessaging
-	ReqRepMessaging infrastructure.ReqRepMessaging
-	KeyValueStorage infrastructure.KeyValueStorage
-)
-
 func init() {
 	registerFlags()
 }
@@ -30,15 +25,23 @@ func init() {
 func main() {
 	flag.Parse()
 
-	// Setup infrastructures
-	setupInfrastructures()
+	// Setup infrastructure
+	var services *infrastructure.Services
+	if v, err := setupInfrastructure(); nil != err {
+		panic(fmt.Errorf("error occured during infrastrucure setup: %s", err))
+	} else {
+		services = v
+	}
 
 	// Create the application
-	sosApp := sos.Application{}
-	sosApp.Setup()
+	sosApp := sos.Application{
+		Services: *services,
+	}
 
 	// Run the application
-	sosApp.Run()
+	if err := sosApp.Start(); nil != err {
+		panic(fmt.Errorf("error occured during application start: %s", err))
+	}
 }
 
 func registerFlags() {
@@ -48,22 +51,26 @@ func registerFlags() {
 	flag.StringVar(&CfgRedisAddress, "redis", "redis.race:6379", "Redis Address")
 }
 
-func setupInfrastructures() {
+func setupInfrastructure() (*infrastructure.Services, error) {
+	services := new(infrastructure.Services)
+
 	if v, err := nats.NewPubSubMessaging(CfgNatsUri); nil != err {
-		panic(err)
+		return nil, err
 	} else {
-		PubSubMessaging = v
+		services.PubSubMessaging = v
 	}
 
 	if v, err := nats.NewReqRepMessagingProvider(CfgNatsUri); nil != err {
-		panic(err)
+		return nil, err
 	} else {
-		ReqRepMessaging = v
+		services.ReqRepMessaging = v
 	}
 
 	if v, err := redis.NewKeyValueStorage(CfgRedisAddress); nil != err {
-		panic(err)
+		return nil, err
 	} else {
-		KeyValueStorage = v
+		services.KeyValueStorage = v
 	}
+
+	return services, nil
 }

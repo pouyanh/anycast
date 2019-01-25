@@ -84,7 +84,7 @@ services:
     image: registry.janstun.com/library/golang:develop
     working_dir: /go/src/github.com/pouyanh/anycast/platform
     volumes:
-    - ./app:/go/src/github.com/pouyanh/anycast/platform
+    - $GOPATH/src:/go/src
 
   client:
     scale: 5
@@ -94,7 +94,7 @@ services:
     image: registry.janstun.com/library/golang:develop
     working_dir: /go/src/github.com/pouyanh/anycast/client
     volumes:
-    - ./app:/go/src/github.com/pouyanh/anycast/client
+    - $GOPATH/src:/go/src
 
   servant:
     scale: 5
@@ -104,4 +104,4 @@ services:
     image: registry.janstun.com/library/golang:develop
     working_dir: /go/src/github.com/pouyanh/anycast/servant
     volumes:
-    - ./app:/go/src/github.com/pouyanh/anycast/servant
+    - $GOPATH/src:/go/src

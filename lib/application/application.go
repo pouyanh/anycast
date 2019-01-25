@@ -1,7 +1,6 @@
 package application
 
 type Application interface {
-	Setup()
-	Run()
-	Stop()
+	Start() error
+	Stop() error
 }

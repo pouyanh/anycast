@@ -1,5 +1,13 @@
 package domain
 
-type Sos struct {
+type Client struct {
 
+}
+
+type Servant struct {
+
+}
+
+type HelpRequest struct {
+	Topic string
 }
