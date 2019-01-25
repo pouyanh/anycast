@@ -1,0 +1,34 @@
+desc: Development mode app runner
+watch_depth: 1000
+watch_paths:
+- .
+triggers:
+- name: "swagger"
+  shell: true
+  cmd: >
+    go generate ./...
+  signal: HUP
+  kill_signal: "SIGHUP"
+  pattens:
+  - '**/swagger.yml'
+  - '**/*.sql'
+
+- name: "test"
+  shell: true
+  cmd: go test -cover ./...
+  pattens:
+  - '**/*.go'
+
+- name: "run"
+  shell: true
+  cmd: >
+    go install &&
+    $GOPATH/bin/passenger -D
+  signal: TERM
+  kill_signal: "SIGTERM"
+  delay: 100ms
+  stop_timeout: 3s
+  env:
+    DEBUG: "1"
+  pattens:
+  - '**/*.go'
