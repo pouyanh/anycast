@@ -2,8 +2,10 @@ package main
 
 import (
 	"flag"
+
 	"github.com/pouyanh/anycast/lib/infrastructure"
 	"github.com/pouyanh/anycast/lib/infrastructure/nats"
+	"github.com/pouyanh/anycast/lib/infrastructure/redis"
 
 	"github.com/pouyanh/anycast/platform/application/sos"
 )
@@ -18,6 +20,7 @@ var (
 var (
 	PubSubMessaging infrastructure.PubSubMessaging
 	ReqRepMessaging infrastructure.ReqRepMessaging
+	KeyValueStorage infrastructure.KeyValueStorage
 )
 
 func init() {
@@ -47,14 +50,20 @@ func registerFlags() {
 
 func setupInfrastructures() {
 	if v, err := nats.NewPubSubMessaging(CfgNatsUri); nil != err {
-		PubSubMessaging = v
-	} else {
 		panic(err)
+	} else {
+		PubSubMessaging = v
 	}
 
 	if v, err := nats.NewReqRepMessagingProvider(CfgNatsUri); nil != err {
-		ReqRepMessaging = v
-	} else {
 		panic(err)
+	} else {
+		ReqRepMessaging = v
+	}
+
+	if v, err := redis.NewKeyValueStorage(CfgRedisAddress); nil != err {
+		panic(err)
+	} else {
+		KeyValueStorage = v
 	}
 }
