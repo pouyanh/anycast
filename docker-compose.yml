@@ -76,15 +76,15 @@ services:
     environment:
       HOSTNAME: nats.race
 
-  brain:
+  platform:
     scale: 5
     build:
-      context: ./brain
+      context: ./platform
       dockerfile: Dockerfile-dev
     image: registry.janstun.com/library/golang:develop
-    working_dir: /go/src/github.com/pouyanh/anycast/brain
+    working_dir: /go/src/github.com/pouyanh/anycast/platform
     volumes:
-    - ./app:/go/src/github.com/pouyanh/anycast/brain
+    - ./app:/go/src/github.com/pouyanh/anycast/platform
 
   client:
     scale: 5

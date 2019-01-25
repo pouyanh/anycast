@@ -23,7 +23,7 @@ triggers:
   shell: true
   cmd: >
     go install &&
-    $GOPATH/bin/brain -D
+    $GOPATH/bin/platform -D
   signal: TERM
   kill_signal: "SIGTERM"
   delay: 100ms

@@ -5,7 +5,7 @@ import (
 	"github.com/pouyanh/anycast/lib/infrastructure"
 	"github.com/pouyanh/anycast/lib/infrastructure/nats"
 
-	"github.com/pouyanh/anycast/brain/application/transportation"
+	"github.com/pouyanh/anycast/platform/application/sos"
 )
 
 var (
@@ -31,11 +31,11 @@ func main() {
 	setupInfrastructures()
 
 	// Create the application
-	trpApp := transportation.Application{}
-	trpApp.Setup()
+	sosApp := sos.Application{}
+	sosApp.Setup()
 
 	// Run the application
-	trpApp.Run()
+	sosApp.Run()
 }
 
 func registerFlags() {
