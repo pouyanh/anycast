@@ -11,11 +11,13 @@ import (
 )
 
 type Application struct {
-	wg sync.WaitGroup
+	wg       sync.WaitGroup
 	handlers []application.Handler
 
 	Services infrastructure.Services
 }
+
+type controller func(infrastructure.Message) error
 
 func (a *Application) Start() error {
 	// Check for services
@@ -47,6 +49,10 @@ func (a *Application) Stop() error {
 	return nil
 }
 
+func (a Application) CommandHelp(msg infrastructure.Message) error {
+	return nil
+}
+
 func (a Application) check() error {
 	if nil == a.Services.KeyValueStorage {
 		return fmt.Errorf("no key/value storage service has been registered")
@@ -64,9 +70,9 @@ func (a Application) check() error {
 }
 
 func (a *Application) setup() error {
-	if h, err := a.register(kernel.CMD_HELP); nil != err {
+	if h, err := a.register(kernel.CMD_HELP, a.CommandHelp); nil != err {
 		return err
-	} else if err := h.Increase(10); nil != err {
+	} else if err := h.Increase(1000); nil != err {
 		return err
 	} else {
 		a.handlers = append(a.handlers, h)
@@ -80,6 +86,7 @@ type handler struct {
 	count  int32
 	chstop chan bool
 
+	fn    controller
 	chmsg <-chan infrastructure.Message
 }
 
@@ -101,7 +108,15 @@ func (h *handler) Increase(count int) error {
 				case <-h.chstop:
 					return
 
-				case msg := <-h.chmsg:
+				case msg, ok := <-h.chmsg:
+					if !ok {
+						return
+					}
+
+					// TODO: Return response io.Writer or anything else
+					if err := h.fn(msg); nil != err {
+						// TODO: Handle error
+					}
 				}
 			}
 		}()
@@ -124,13 +139,14 @@ func (h *handler) Unregister() error {
 	return nil
 }
 
-func (a *Application) register(topic string) (application.Handler, error) {
+func (a *Application) register(topic string, fn controller) (application.Handler, error) {
 	if ch, err := a.Services.PubSubMessaging.Subscribe(topic); nil != err {
 		return nil, err
 	} else {
 		return &handler{
-			chmsg: ch,
 			wg:    a.wg,
+			fn:    fn,
+			chmsg: ch,
 		}, nil
 	}
 }

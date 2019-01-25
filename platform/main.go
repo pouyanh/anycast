@@ -1,11 +1,11 @@
 package main
 
 import (
-	"flag"
-	"fmt"
 	"os"
-	"os/signal"
+	"fmt"
+	"flag"
 	"syscall"
+	"os/signal"
 
 	"github.com/pouyanh/anycast/lib/application"
 	"github.com/pouyanh/anycast/lib/infrastructure"
