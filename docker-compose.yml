@@ -6,12 +6,12 @@ services:
     networks:
       default:
         aliases:
-        - mysql.any
+        - mysql.race
     volumes:
     - ./configs/mysql:/etc/mysql/race
     - ./.persist/mysql:/var/lib/mysql
     environment:
-      HOSTNAME: mysql.any
+      HOSTNAME: mysql.race
 
       MYSQL_ROOT_PASSWORD: toor
 
@@ -20,31 +20,31 @@ services:
     - mysql
     image: phpmyadmin/phpmyadmin:latest
     environment:
-      HOSTNAME: mysqladmin.any
+      HOSTNAME: mysqladmin.race
 
       MYSQL_ROOT_PASSWORD: toor
-      PMA_HOST: mysql.any
-      PMA_ABSOLUTE_URI: http://mysqladmin.any
+      PMA_HOST: mysql.race
+      PMA_ABSOLUTE_URI: http://mysqladmin.race
 
   mongo:
     image: mongo:latest
     networks:
       default:
         aliases:
-        - mongo.any
+        - mongo.race
     volumes:
     - ./.persist/mongo:/data/db
     environment:
-      HOSTNAME: mongo.any
+      HOSTNAME: mongo.race
 
   mongo-admin:
     depends_on:
     - mongo
     image: mongo-express:latest
     environment:
-      HOSTNAME: mongoadmin.any
+      HOSTNAME: mongoadmin.race
 
-      ME_CONFIG_MONGODB_SERVER: mongo.any
+      ME_CONFIG_MONGODB_SERVER: mongo.race
       ME_CONFIG_OPTIONS_EDITORTHEME: darcula
       VCAP_APP_PORT: 80
 
@@ -53,28 +53,28 @@ services:
     networks:
       default:
         aliases:
-        - redis.any
+        - redis.race
     environment:
-      HOSTNAME: redis.any
+      HOSTNAME: redis.race
 
   redis-admin:
     image: rediscommander/redis-commander:latest
     cap_add:
     - NET_BIND_SERVICE
     environment:
-      HOSTNAME: redisadmin.any
+      HOSTNAME: redisadmin.race
 
       PORT: 80
-      REDIS_HOSTS: redis.any
+      REDIS_HOSTS: redis.race
 
   nats:
     image: nats:latest
     networks:
       default:
         aliases:
-        - nats.any
+        - nats.race
     environment:
-      HOSTNAME: nats.any
+      HOSTNAME: nats.race
 
   platform:
     scale: 2

@@ -48,7 +48,7 @@ func main() {
 }
 
 func registerFlags() {
-	flag.StringVar(&CfgNatsUri, "nats", "nats://nats.any:4222", "NATS URI")
+	flag.StringVar(&CfgNatsUri, "nats", "nats://nats.race:4222", "NATS URI")
 }
 
 func setupInfrastructure() (*infrastructure.Services, error) {
