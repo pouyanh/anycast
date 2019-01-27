@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/pouyanh/anycast/lib/infrastructure/logrus"
 	"os"
 	"fmt"
 	"flag"
@@ -12,7 +11,8 @@ import (
 	"github.com/pouyanh/anycast/lib/infrastructure"
 	"github.com/pouyanh/anycast/lib/infrastructure/nats"
 	"github.com/pouyanh/anycast/lib/infrastructure/redis"
-	"github.com/pouyanh/anycast/platform/application/sos"
+	"github.com/pouyanh/anycast/lib/infrastructure/logrus"
+	"github.com/pouyanh/anycast/platform/application/selection"
 )
 
 var (
@@ -38,15 +38,15 @@ func main() {
 	}
 
 	// Create the application
-	sosApp := &sos.Application{
+	slcApp := &selection.Application{
 		Services: *services,
 	}
 
 	// Handle shutdown
-	handleShutdown(sosApp)
+	handleShutdown(slcApp)
 
 	// Run the application
-	if err := sosApp.Start(); nil != err {
+	if err := slcApp.Start(); nil != err {
 		panic(fmt.Errorf("error occured during application start: %s", err))
 	}
 }
@@ -60,6 +60,12 @@ func registerFlags() {
 
 func setupInfrastructure() (*infrastructure.Services, error) {
 	services := new(infrastructure.Services)
+
+	if v, err := logrus.NewLevelledLogger(infrastructure.DEBUG); nil != err {
+		return nil, err
+	} else {
+		services.LevelledLogger = v
+	}
 
 	if v, err := nats.NewPubSubMessaging(CfgNatsUri); nil != err {
 		return nil, err
@@ -77,12 +83,6 @@ func setupInfrastructure() (*infrastructure.Services, error) {
 		return nil, err
 	} else {
 		services.KeyValueStorage = v
-	}
-
-	if v, err := logrus.NewLevelledLogger(infrastructure.DEBUG); nil != err {
-		return nil, err
-	} else {
-		services.LevelledLogger = v
 	}
 
 	return services, nil

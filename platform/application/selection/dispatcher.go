@@ -8,25 +8,25 @@ import (
 	"github.com/pouyanh/anycast/lib/infrastructure"
 )
 
-func (a *Application) listen(event string, cmd application.Command) (application.Handler, error) {
+func (a *Application) listen(event string, command application.Command) (application.Handler, error) {
 	if ch, err := a.Services.PubSubMessaging.Subscribe(event); nil != err {
 		return nil, err
 	} else {
 		return &handler{
-			wg:    a.wg,
-			cmd:    cmd,
-			chmsg: ch,
+			wg:      a.wg,
+			command: command,
+			chmsg:   ch,
 		}, nil
 	}
 }
 
 type handler struct {
-	wg     sync.WaitGroup
 	count  int32
 	chstop chan bool
+	wg     sync.WaitGroup
 
-	cmd    application.Command
-	chmsg <-chan infrastructure.Message
+	command application.Command
+	chmsg   <-chan infrastructure.Message
 }
 
 func (h *handler) Increase(count int) error {
@@ -53,7 +53,7 @@ func (h *handler) Increase(count int) error {
 					}
 
 					// TODO: Return response io.Writer or anything else
-					if err := h.cmd.Run(msg.Data); nil != err {
+					if err := h.command.Run(msg.Data); nil != err {
 						// TODO: Handle error
 					}
 				}
