@@ -1,21 +1,20 @@
-package sos
+package selection
 
 import (
 	"sync"
-	"bytes"
 	"sync/atomic"
 
 	"github.com/pouyanh/anycast/lib/application"
 	"github.com/pouyanh/anycast/lib/infrastructure"
 )
 
-func (a *Application) register(topic string, fn Controller) (application.Handler, error) {
-	if ch, err := a.Services.PubSubMessaging.Subscribe(topic); nil != err {
+func (a *Application) listen(event string, cmd application.Command) (application.Handler, error) {
+	if ch, err := a.Services.PubSubMessaging.Subscribe(event); nil != err {
 		return nil, err
 	} else {
 		return &handler{
 			wg:    a.wg,
-			fn:    fn,
+			cmd:    cmd,
 			chmsg: ch,
 		}, nil
 	}
@@ -26,7 +25,7 @@ type handler struct {
 	count  int32
 	chstop chan bool
 
-	fn    Controller
+	cmd    application.Command
 	chmsg <-chan infrastructure.Message
 }
 
@@ -54,7 +53,7 @@ func (h *handler) Increase(count int) error {
 					}
 
 					// TODO: Return response io.Writer or anything else
-					if err := h.fn(bytes.NewReader(msg.Data), nil); nil != err {
+					if err := h.cmd.Run(msg.Data); nil != err {
 						// TODO: Handle error
 					}
 				}

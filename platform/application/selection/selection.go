@@ -1,7 +1,6 @@
-package sos
+package selection
 
 import (
-	"io"
 	"fmt"
 	"sync"
 
@@ -15,8 +14,6 @@ type Application struct {
 
 	Services infrastructure.Services
 }
-
-type Controller func(io.Reader, io.Writer) error
 
 func (a *Application) Start() error {
 	// Check for services
