@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	CfgNatsUri      string
+	CfgNatsUri string
 )
 
 func init() {

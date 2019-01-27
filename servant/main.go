@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/pouyanh/anycast/servant/application/servant"
 	"os"
 	"fmt"
 	"flag"
@@ -12,6 +11,7 @@ import (
 	"github.com/pouyanh/anycast/lib/infrastructure"
 	"github.com/pouyanh/anycast/lib/infrastructure/nats"
 	"github.com/pouyanh/anycast/lib/infrastructure/logrus"
+	"github.com/pouyanh/anycast/servant/application/servant"
 )
 
 var (
