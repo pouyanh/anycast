@@ -1,17 +1,17 @@
 package main
 
 import (
-	"os"
-	"fmt"
 	"flag"
-	"syscall"
+	"fmt"
+	"os"
 	"os/signal"
+	"syscall"
 
 	"github.com/pouyanh/anycast/lib/application"
 	"github.com/pouyanh/anycast/lib/infrastructure"
+	"github.com/pouyanh/anycast/lib/infrastructure/logrus"
 	"github.com/pouyanh/anycast/lib/infrastructure/nats"
 	"github.com/pouyanh/anycast/lib/infrastructure/redis"
-	"github.com/pouyanh/anycast/lib/infrastructure/logrus"
 	"github.com/pouyanh/anycast/platform/application/selection"
 )
 
@@ -42,12 +42,14 @@ func main() {
 		Services: *services,
 	}
 
-	// Handle shutdown
-	handleShutdown(slcApp)
-
 	// Run the application
 	if err := slcApp.Start(); nil != err {
 		panic(fmt.Errorf("error occured during application start: %s", err))
+	}
+
+	// Handle shutdown
+	if err := <-waitForShutdown(slcApp); nil != err {
+		panic(err)
 	}
 }
 
@@ -88,21 +90,24 @@ func setupInfrastructure() (*infrastructure.Services, error) {
 	return services, nil
 }
 
-func handleShutdown(apps ...application.Application) {
-	gracefulStop := make(chan os.Signal)
-	signal.Notify(gracefulStop, syscall.SIGTERM)
-	signal.Notify(gracefulStop, syscall.SIGINT)
+func waitForShutdown(apps ...application.Application) chan error {
+	chshutdown := make(chan os.Signal)
+	signal.Notify(chshutdown, syscall.SIGTERM, syscall.SIGINT)
+
+	cherr := make(chan error)
 
 	go func() {
-		sig := <-gracefulStop
+		defer close(cherr)
+
+		sig := <-chshutdown
 		fmt.Printf("caught sig: %+v", sig)
 
 		for _, app := range apps {
 			if err := app.Stop(); nil != err {
-				os.Exit(1)
+				cherr <- err
 			}
 		}
-
-		os.Exit(0)
 	}()
+
+	return cherr
 }

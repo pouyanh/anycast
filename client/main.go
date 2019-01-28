@@ -38,12 +38,14 @@ func main() {
 		Services: *services,
 	}
 
-	// Handle shutdown
-	handleShutdown(clientApp)
-
 	// Run the application
 	if err := clientApp.Start(); nil != err {
 		panic(fmt.Errorf("error occured during application start: %s", err))
+	}
+
+	// Handle shutdown
+	if err := <-waitForShutdown(clientApp); nil != err {
+		panic(err)
 	}
 }
 
@@ -75,21 +77,24 @@ func setupInfrastructure() (*infrastructure.Services, error) {
 	return services, nil
 }
 
-func handleShutdown(apps ...application.Application) {
-	gracefulStop := make(chan os.Signal)
-	signal.Notify(gracefulStop, syscall.SIGTERM)
-	signal.Notify(gracefulStop, syscall.SIGINT)
+func waitForShutdown(apps ...application.Application) chan error {
+	chshutdown := make(chan os.Signal)
+	signal.Notify(chshutdown, syscall.SIGTERM, syscall.SIGINT)
+
+	cherr := make(chan error)
 
 	go func() {
-		sig := <-gracefulStop
+		defer close(cherr)
+
+		sig := <-chshutdown
 		fmt.Printf("caught sig: %+v", sig)
 
 		for _, app := range apps {
 			if err := app.Stop(); nil != err {
-				os.Exit(1)
+				cherr <- err
 			}
 		}
-
-		os.Exit(0)
 	}()
+
+	return cherr
 }
