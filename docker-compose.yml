@@ -77,7 +77,7 @@ services:
       HOSTNAME: nats.race
 
   platform:
-    scale: 2
+    scale: 5
     build:
       context: ./platform
       dockerfile: Dockerfile-dev
@@ -85,9 +85,11 @@ services:
     working_dir: /go/src/github.com/pouyanh/anycast/platform
     volumes:
     - $GOPATH/src:/go/src
+    environment:
+      HOSTNAME: platform.race
 
   client:
-    scale: 2
+    scale: 5
     build:
       context: ./client
       dockerfile: Dockerfile-dev
@@ -95,9 +97,11 @@ services:
     working_dir: /go/src/github.com/pouyanh/anycast/client
     volumes:
     - $GOPATH/src:/go/src
+    environment:
+      HOSTNAME: client.race
 
   servant:
-    scale: 2
+    scale: 5
     build:
       context: ./servant
       dockerfile: Dockerfile-dev
@@ -105,3 +109,5 @@ services:
     working_dir: /go/src/github.com/pouyanh/anycast/servant
     volumes:
     - $GOPATH/src:/go/src
+    environment:
+      HOSTNAME: servant.race

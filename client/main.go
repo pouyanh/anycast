@@ -1,17 +1,17 @@
 package main
 
 import (
-	"os"
-	"fmt"
 	"flag"
-	"syscall"
+	"fmt"
+	"os"
 	"os/signal"
+	"syscall"
 
+	"github.com/pouyanh/anycast/client/application/client"
 	"github.com/pouyanh/anycast/lib/application"
 	"github.com/pouyanh/anycast/lib/infrastructure"
-	"github.com/pouyanh/anycast/lib/infrastructure/nats"
-	"github.com/pouyanh/anycast/client/application/client"
 	"github.com/pouyanh/anycast/lib/infrastructure/logrus"
+	"github.com/pouyanh/anycast/lib/infrastructure/nats"
 )
 
 var (

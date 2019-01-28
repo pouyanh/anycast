@@ -23,7 +23,7 @@ triggers:
   shell: true
   cmd: >
     go install &&
-    $GOPATH/bin/servant -D
+    $GOPATH/bin/servant
   signal: TERM
   kill_signal: "SIGTERM"
   delay: 100ms
