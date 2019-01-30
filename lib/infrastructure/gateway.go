@@ -14,7 +14,7 @@ type multiGateways struct {
 	gws []Gateway
 }
 
-func StickGateways(gateways... Gateway) Gateway {
+func StickGateways(gateways ...Gateway) Gateway {
 	return multiGateways{gws: gateways}
 }
 

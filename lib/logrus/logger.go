@@ -10,11 +10,11 @@ type levelled struct {
 	logger *logrus.Logger
 }
 
-var lvlMap = map[infrastructure.LogLevel]logrus.Level {
+var lvlMap = map[infrastructure.LogLevel]logrus.Level{
 	infrastructure.FATAL: logrus.FatalLevel,
 	infrastructure.ERROR: logrus.ErrorLevel,
-	infrastructure.WARN: logrus.WarnLevel,
-	infrastructure.INFO: logrus.InfoLevel,
+	infrastructure.WARN:  logrus.WarnLevel,
+	infrastructure.INFO:  logrus.InfoLevel,
 	infrastructure.DEBUG: logrus.DebugLevel,
 }
 

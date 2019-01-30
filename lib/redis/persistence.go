@@ -1,9 +1,9 @@
 package redis
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
-	"encoding/json"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/pouyanh/anycast/lib/infrastructure"
@@ -75,7 +75,7 @@ func (s cache) Delete(key string) error {
 	return nil
 }
 
-func NewKeyValueStorage(dsn string) (infrastructure.KeyValueStorage, error) {
+func NewKeyValueStorage(dsn string) (infrastructure.Dictionary, error) {
 	pool := &redis.Pool{
 		MaxIdle:     3,
 		IdleTimeout: 240 * time.Second,
