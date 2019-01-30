@@ -1,6 +1,7 @@
 package infrastructure
 
-type KeyValueStorage interface {
+// Key/Value Storage
+type Dictionary interface {
 	Put(key string, value interface{}) error
 	Has(key string) bool
 	Get(key string) interface{}

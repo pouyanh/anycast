@@ -96,7 +96,7 @@ func NewPubSubMessaging(url string) (infrastructure.PubSubMessaging, error) {
 	}
 }
 
-func NewReqRepMessagingProvider(url string) (infrastructure.ReqRepMessaging, error) {
+func NewReqRepMessaging(url string) (infrastructure.ReqRepMessaging, error) {
 	if conn, err := nats.Connect(url); err != nil {
 		return nil, err
 	} else {
