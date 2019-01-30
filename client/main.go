@@ -28,7 +28,7 @@ func main() {
 	// Setup infrastructure
 	var services *infrastructure.Services
 	if v, err := setupInfrastructure(); nil != err {
-		panic(fmt.Errorf("error occured during infrastrucure setup: %s", err))
+		panic(fmt.Errorf("error occurred during infrastrucure setup: %s", err))
 	} else {
 		services = v
 	}
@@ -40,7 +40,7 @@ func main() {
 
 	// Run the application
 	if err := clientApp.Start(); nil != err {
-		panic(fmt.Errorf("error occured during application start: %s", err))
+		panic(fmt.Errorf("error occurred during application start: %s", err))
 	}
 
 	// Handle shutdown
@@ -65,13 +65,13 @@ func setupInfrastructure() (*infrastructure.Services, error) {
 	if v, err := nats.NewPubSubMessaging(CfgNatsUri); nil != err {
 		return nil, err
 	} else {
-		services.PubSubMessaging = v
+		services.AsyncBroker = v
 	}
 
-	if v, err := nats.NewReqRepMessagingProvider(CfgNatsUri); nil != err {
+	if v, err := nats.NewReqRepMessaging(CfgNatsUri); nil != err {
 		return nil, err
 	} else {
-		services.ReqRepMessaging = v
+		services.SyncBroker = v
 	}
 
 	return services, nil
