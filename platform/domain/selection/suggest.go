@@ -9,7 +9,6 @@ type Client interface {
 }
 
 type client struct {
-
 }
 
 type Servant interface {
@@ -17,5 +16,4 @@ type Servant interface {
 }
 
 type servant struct {
-
 }
