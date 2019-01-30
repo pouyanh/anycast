@@ -32,7 +32,7 @@ func main() {
 	// Setup infrastructure
 	var services *infrastructure.Services
 	if v, err := setupInfrastructure(); nil != err {
-		panic(fmt.Errorf("error occurred during infrastrucure setup: %s", err))
+		panic(fmt.Errorf("error occurred during infrastructure setup: %s", err))
 	} else {
 		services = v
 	}
