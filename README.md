@@ -15,7 +15,14 @@ Clients will make requests and only one servant can accept the request to proces
 * [Run](#run)
 
 ## Problem
+Multiple servants want to serve same client at the same time
 
-## Soluttion
+## Solution
 
 ## Run
+1. Run the environment
+```bash
+docker-compose up -d
+```
+
+2. Monitor interactions through browser
