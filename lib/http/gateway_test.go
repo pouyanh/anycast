@@ -67,7 +67,34 @@ func TestGatewayRequestMethod(t *testing.T) {
 	go gw.ListenAndServe()
 	defer gw.Shutdown(context.Background())
 
+	gw.Handle("/resource", http.HandlerFunc(
+		func(rw http.ResponseWriter, req *http.Request) {
+			rw.Write([]byte(req.Method))
+		},
+	))
+
 	<-time.After(time.Millisecond * 100)
+
+	methods := []string{http.MethodPost, http.MethodGet, http.MethodDelete, http.MethodPut}
+	for _, method := range methods {
+		req, _ := http.NewRequest(
+			method,
+			fmt.Sprintf(
+				"http://%s/%s",
+				addr.String(),
+				"resource",
+			),
+			nil,
+		)
+
+		if resp, err := http.DefaultClient.Do(req); nil != err {
+			t.Errorf("error on http `%s` request: %s", method, err)
+		} else if body, err := ioutil.ReadAll(resp.Body); nil != err {
+			t.Errorf("error on reading response body: %s", err)
+		} else if !bytes.Equal([]byte(method), body) {
+			t.Errorf("expected `%s` got `%s`", method, body)
+		}
+	}
 }
 
 func TestGatewayRequestHeaders(t *testing.T) {
@@ -75,7 +102,34 @@ func TestGatewayRequestHeaders(t *testing.T) {
 	go gw.ListenAndServe()
 	defer gw.Shutdown(context.Background())
 
+	header, value := "phi0lambda", "Pouyan"
+
+	gw.Handle("/headers", http.HandlerFunc(
+		func(rw http.ResponseWriter, req *http.Request) {
+			rw.Write([]byte(req.Header.Get(header)))
+		},
+	))
+
 	<-time.After(time.Millisecond * 100)
+
+	req, _ := http.NewRequest(
+		http.MethodPost,
+		fmt.Sprintf(
+			"http://%s/%s",
+			addr.String(),
+			"headers",
+		),
+		nil,
+	)
+	req.Header.Add(header, value)
+
+	if resp, err := http.DefaultClient.Do(req); nil != err {
+		t.Errorf("error on http `%s` request: %s", http.MethodPost, err)
+	} else if body, err := ioutil.ReadAll(resp.Body); nil != err {
+		t.Errorf("error on reading response body: %s", err)
+	} else if !bytes.Equal([]byte(value), body) {
+		t.Errorf("expected `%s` got `%s`", value, body)
+	}
 }
 
 func TestGatewayResponseStatus(t *testing.T) {
@@ -83,7 +137,31 @@ func TestGatewayResponseStatus(t *testing.T) {
 	go gw.ListenAndServe()
 	defer gw.Shutdown(context.Background())
 
+	status := http.StatusAccepted
+
+	gw.Handle("/state", http.HandlerFunc(
+		func(rw http.ResponseWriter, req *http.Request) {
+			rw.WriteHeader(status)
+		},
+	))
+
 	<-time.After(time.Millisecond * 100)
+
+	req, _ := http.NewRequest(
+		http.MethodGet,
+		fmt.Sprintf(
+			"http://%s/%s",
+			addr.String(),
+			"state",
+		),
+		nil,
+	)
+
+	if resp, err := http.DefaultClient.Do(req); nil != err {
+		t.Errorf("error on http `%s` request: %s", http.MethodGet, err)
+	} else if status != resp.StatusCode {
+		t.Errorf("expected `%d` got `%d`", status, resp.StatusCode)
+	}
 }
 
 func TestGatewayResponseHeaders(t *testing.T) {
@@ -91,9 +169,29 @@ func TestGatewayResponseHeaders(t *testing.T) {
 	go gw.ListenAndServe()
 	defer gw.Shutdown(context.Background())
 
+	header, value := "phi0lambda", "Pouyan"
+
+	gw.Handle("/headers", http.HandlerFunc(
+		func(rw http.ResponseWriter, req *http.Request) {
+			rw.Header().Set(header, value)
+		},
+	))
+
 	<-time.After(time.Millisecond * 100)
-}
 
-func TestGatewayAsAdapter(t *testing.T) {
+	req, _ := http.NewRequest(
+		http.MethodGet,
+		fmt.Sprintf(
+			"http://%s/%s",
+			addr.String(),
+			"headers",
+		),
+		nil,
+	)
 
+	if resp, err := http.DefaultClient.Do(req); nil != err {
+		t.Errorf("error on http `%s` request: %s", http.MethodGet, err)
+	} else if v := resp.Header.Get(header); value != v {
+		t.Errorf("expected `%s` got `%s`", value, v)
+	}
 }
