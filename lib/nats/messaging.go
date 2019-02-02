@@ -8,7 +8,7 @@ import (
 	"github.com/pouyanh/anycast/lib/infrastructure"
 )
 
-type messaging struct {
+type broker struct {
 	conn *nats.Conn
 
 	// Subscriptions list
@@ -21,7 +21,7 @@ type messaging struct {
 	chunsubs chan string
 }
 
-func (s messaging) Publish(topic string, reply string, data []byte) error {
+func (s broker) Publish(topic string, reply string, data []byte) error {
 	return s.conn.PublishMsg(&nats.Msg{
 		Subject: topic,
 		Reply:   reply,
@@ -29,7 +29,7 @@ func (s messaging) Publish(topic string, reply string, data []byte) error {
 	})
 }
 
-func (s *messaging) Subscribe(topic string) (<-chan infrastructure.Message, error) {
+func (s *broker) Subscribe(topic string) (<-chan infrastructure.Message, error) {
 	if nil == s.chsubs {
 		s.chsubs = make(chan *nats.Subscription)
 		s.subs = make(map[string]*nats.Subscription)
@@ -68,7 +68,7 @@ func (s *messaging) Subscribe(topic string) (<-chan infrastructure.Message, erro
 	return ch, nil
 }
 
-func (s *messaging) Unsubscribe(topic string) error {
+func (s *broker) Unsubscribe(topic string) error {
 	if sub, ok := s.subs[topic]; !ok {
 		return fmt.Errorf("topic `%s` is not in subscription list", topic)
 	} else if err := sub.Unsubscribe(); err != nil {
@@ -80,7 +80,7 @@ func (s *messaging) Unsubscribe(topic string) error {
 	}
 }
 
-func (s messaging) Request(topic string, message []byte, timeout time.Duration) ([]byte, error) {
+func (s broker) Request(topic string, message []byte, timeout time.Duration) ([]byte, error) {
 	if msg, err := s.conn.Request(topic, message, timeout); err != nil {
 		return nil, err
 	} else {
@@ -88,18 +88,18 @@ func (s messaging) Request(topic string, message []byte, timeout time.Duration) 
 	}
 }
 
-func NewPubSubMessaging(url string) (infrastructure.PubSubMessaging, error) {
+func NewAsyncBroker(url string) (infrastructure.AsyncBroker, error) {
 	if conn, err := nats.Connect(url); err != nil {
 		return nil, err
 	} else {
-		return &messaging{conn: conn}, nil
+		return &broker{conn: conn}, nil
 	}
 }
 
-func NewReqRepMessaging(url string) (infrastructure.ReqRepMessaging, error) {
+func NewSyncBroker(url string) (infrastructure.SyncBroker, error) {
 	if conn, err := nats.Connect(url); err != nil {
 		return nil, err
 	} else {
-		return messaging{conn: conn}, nil
+		return broker{conn: conn}, nil
 	}
 }
