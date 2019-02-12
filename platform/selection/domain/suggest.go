@@ -1,4 +1,4 @@
-package selection
+package domain
 
 type HelpRequest struct {
 	Topic string

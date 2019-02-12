@@ -9,9 +9,9 @@ import (
 
 	"github.com/pouyanh/anycast/lib/application"
 	"github.com/pouyanh/anycast/lib/infrastructure"
-	"github.com/pouyanh/anycast/lib/infrastructure/logrus"
-	"github.com/pouyanh/anycast/lib/infrastructure/nats"
-	"github.com/pouyanh/anycast/lib/infrastructure/redis"
+	"github.com/pouyanh/anycast/lib/logrus"
+	"github.com/pouyanh/anycast/lib/nats"
+	"github.com/pouyanh/anycast/lib/redis"
 	"github.com/pouyanh/anycast/platform/application/selection"
 )
 

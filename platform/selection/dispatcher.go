@@ -8,11 +8,11 @@ import (
 	"github.com/pouyanh/anycast/lib/infrastructure"
 )
 
-func (a *Application) listen(event string, command application.Command) (application.Handler, error) {
-	if ch, err := a.Services.PubSubMessaging.Subscribe(event); nil != err {
+func (a *Application) listen(event string, command application.Command) (application.WorkerPool, error) {
+	if ch, err := a.Services.AsyncBroker.Subscribe(event); nil != err {
 		return nil, err
 	} else {
-		return &handler{
+		return &workerPool{
 			wg:      a.wg,
 			command: command,
 			chmsg:   ch,
@@ -20,7 +20,7 @@ func (a *Application) listen(event string, command application.Command) (applica
 	}
 }
 
-type handler struct {
+type workerPool struct {
 	count  int32
 	chstop chan bool
 	wg     sync.WaitGroup
@@ -29,7 +29,7 @@ type handler struct {
 	chmsg   <-chan infrastructure.Message
 }
 
-func (h *handler) Increase(count int) error {
+func (h *workerPool) Increase(count int) error {
 	if nil == h.chstop {
 		h.chstop = make(chan bool)
 	}
@@ -64,7 +64,7 @@ func (h *handler) Increase(count int) error {
 	return nil
 }
 
-func (h *handler) Decrease(count int) error {
+func (h *workerPool) Decrease(count int) error {
 	for i := 0; i < count; i++ {
 		h.chstop <- true
 	}
@@ -72,7 +72,7 @@ func (h *handler) Decrease(count int) error {
 	return nil
 }
 
-func (h *handler) Unregister() error {
+func (h *workerPool) Unregister() error {
 	close(h.chstop)
 
 	return nil

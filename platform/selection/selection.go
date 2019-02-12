@@ -9,8 +9,8 @@ import (
 )
 
 type Application struct {
-	wg       sync.WaitGroup
-	handlers []application.Handler
+	wg  sync.WaitGroup
+	wps []application.WorkerPool
 
 	Services infrastructure.Services
 }
@@ -55,11 +55,11 @@ func (a Application) check() error {
 		return fmt.Errorf("no levelled logger service has been registered")
 	}
 
-	if nil == a.Services.PubSubMessaging {
+	if nil == a.Services.AsyncBroker {
 		return fmt.Errorf("no publish/subscribe messaging service has been registered")
 	}
 
-	if nil == a.Services.ReqRepMessaging {
+	if nil == a.Services.SyncBroker {
 		return fmt.Errorf("no request/reply messaging service has been registered")
 	}
 
