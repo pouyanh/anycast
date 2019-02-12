@@ -4,20 +4,20 @@ import (
 	"net/http"
 )
 
-type Gateway interface {
+type HttpMux interface {
 	Handle(pattern string, handler http.Handler)
 }
 
-type multiGateways struct {
-	gws []Gateway
+type mmux struct {
+	muxes []HttpMux
 }
 
-func CombineGateways(gateways ...Gateway) Gateway {
-	return multiGateways{gws: gateways}
+func CombineHttpMuxes(muxes ...HttpMux) HttpMux {
+	return mmux{muxes: muxes}
 }
 
-func (mgw multiGateways) Handle(pattern string, handler http.Handler) {
-	for _, gw := range mgw.gws {
-		gw.Handle(pattern, handler)
+func (m mmux) Handle(pattern string, handler http.Handler) {
+	for _, mux := range m.muxes {
+		mux.Handle(pattern, handler)
 	}
 }

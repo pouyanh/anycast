@@ -8,16 +8,28 @@ type Message struct {
 	Data  []byte
 }
 
-// Message Queue - Publish Subscribe service
-type AsyncBroker interface {
-	Publish(topic string, reply string, data []byte) error
+type Subscriber interface {
 	Subscribe(topic string) (<-chan Message, error)
 	Unsubscribe(topic string) error
 }
 
+type Publisher interface {
+	Publish(topic string, reply string, data []byte) error
+}
+
+// Message Queue - Publish Subscribe service
+type AsyncBroker interface {
+	Publisher
+	Subscriber
+}
+
+type Applicant interface {
+	Request(topic string, message []byte, timeout time.Duration) ([]byte, error)
+}
+
 // Message Queue - Request Reply service
 type SyncBroker interface {
-	Request(topic string, message []byte, timeout time.Duration) ([]byte, error)
+	Applicant
 }
 
 // Message Queue - Push Pull service
