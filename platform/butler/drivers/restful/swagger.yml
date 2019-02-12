@@ -1,0 +1,65 @@
+swagger: '2.0'
+info:
+  title: anycast platform butler
+  version: 1.0.0
+  contact:
+    name: Pouyan Heyratpour
+    url: https://pouyanh.github.io
+    email: pouyan@janstun.com
+
+
+schemes:
+- http
+
+# API Root path belonging to this module
+basePath: /butler
+
+consumes:
+- application/anycast.platform.butler.api.v1+json
+produces:
+- application/anycast.platform.butler.api.v1+json
+
+securityDefinitions:
+  key:
+    type: apiKey
+    in: header
+    name: tk
+
+security:
+- key: []
+
+tags:
+- name: help
+  description: All actions about Help
+
+paths:
+
+# ****************** #
+# Methods convention #
+# ****************** #
+#
+# GET: Query
+#
+# POST: Command
+#
+# PUT: Full Update
+#
+# PATCH: Partial Update
+#
+# DELETE: Remove
+
+definitions:
+
+  session:
+    description: User session
+    type: object
+    required:
+    - username
+    - token
+    properties:
+      username:
+        description: Username of the session owner
+        type: string
+      token:
+        description: Access token of the session. Which will be used as security key in requests
+        type: string
