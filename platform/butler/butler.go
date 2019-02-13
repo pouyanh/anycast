@@ -7,7 +7,7 @@ import (
 )
 
 type Butler interface {
-	RequestForHelp() error
+	RequestForHelp(hr HelpRequest) error
 }
 
 type butler struct {
@@ -20,7 +20,11 @@ func NewButler(logger infrastructure.LevelledLogger) Butler {
 	}
 }
 
-func (app butler) RequestForHelp() error {
+type HelpRequest struct {
+
+}
+
+func (app butler) RequestForHelp(hr HelpRequest) error {
 	app.logger.Log(infrastructure.DEBUG, "%s command called", "RequestForHelp")
 
 	return fmt.Errorf("not implemented")

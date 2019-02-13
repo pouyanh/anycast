@@ -1,22 +1,15 @@
 package application
 
-import (
-	"fmt"
-)
-
 type Application interface {
 	Start() error
 	Stop() error
 }
 
-type Handler interface {
+type WorkerPool interface {
+	Count() int
 	Increase(count int) error
 	Decrease(count int) error
 	Unregister() error
-}
-
-type Event interface {
-	fmt.Stringer
 }
 
 type Command interface {
