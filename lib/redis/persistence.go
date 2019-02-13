@@ -75,7 +75,7 @@ func (s cache) Delete(key string) error {
 	return nil
 }
 
-func NewKeyValueStorage(dsn string) (infrastructure.Dictionary, error) {
+func NewDictionary(dsn string) (infrastructure.Dictionary, error) {
 	pool := &redis.Pool{
 		MaxIdle:     3,
 		IdleTimeout: 240 * time.Second,
