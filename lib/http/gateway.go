@@ -9,7 +9,7 @@ import (
 )
 
 type Gateway interface {
-	infrastructure.Gateway
+	infrastructure.HttpMux
 
 	ListenAndServe() error
 	ListenAndServeTLS() error
