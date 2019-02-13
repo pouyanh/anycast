@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/garyburd/redigo/redis"
-	"github.com/pouyanh/anycast/lib/infrastructure"
+	"github.com/pouyanh/anycast/lib/port"
 )
 
 // Redis
@@ -75,7 +75,7 @@ func (s cache) Delete(key string) error {
 	return nil
 }
 
-func NewDictionary(dsn string) (infrastructure.Dictionary, error) {
+func NewDictionary(dsn string) (port.Dictionary, error) {
 	pool := &redis.Pool{
 		MaxIdle:     3,
 		IdleTimeout: 240 * time.Second,

@@ -12,7 +12,7 @@ type Application struct {
 	wg  sync.WaitGroup
 	wps []application.WorkerPool
 
-	Services infrastructure.Services
+	Services port.Services
 }
 
 func (a *Application) Start() error {
@@ -21,20 +21,20 @@ func (a *Application) Start() error {
 		return err
 	}
 
-	a.Services.LevelledLogger.Log(infrastructure.INFO, "Selection is going to be started")
+	a.Services.LevelledLogger.Log(port.INFO, "Selection is going to be started")
 
 	// Register handlers
 	if err := a.setup(); nil != err {
 		return err
 	}
 
-	a.Services.LevelledLogger.Log(infrastructure.INFO, "Selection has been started")
+	a.Services.LevelledLogger.Log(port.INFO, "Selection has been started")
 
 	return nil
 }
 
 func (a *Application) Stop() error {
-	a.Services.LevelledLogger.Log(infrastructure.INFO, "Selection is going to be stopped")
+	a.Services.LevelledLogger.Log(port.INFO, "Selection is going to be stopped")
 
 	for _, h := range a.handlers {
 		if err := h.Unregister(); nil != err {
@@ -42,10 +42,10 @@ func (a *Application) Stop() error {
 		}
 	}
 
-	a.Services.LevelledLogger.Log(infrastructure.INFO, "Selection: Waiting for handlers to finish")
+	a.Services.LevelledLogger.Log(port.INFO, "Selection: Waiting for handlers to finish")
 	a.wg.Wait()
 
-	a.Services.LevelledLogger.Log(infrastructure.INFO, "Selection has been stopped")
+	a.Services.LevelledLogger.Log(port.INFO, "Selection has been stopped")
 
 	return nil
 }

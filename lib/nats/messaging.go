@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/nats-io/go-nats"
-	"github.com/pouyanh/anycast/lib/infrastructure"
+	"github.com/pouyanh/anycast/lib/port"
 )
 
 type broker struct {
@@ -29,7 +29,7 @@ func (s broker) Publish(topic string, reply string, data []byte) error {
 	})
 }
 
-func (s *broker) Subscribe(topic string) (<-chan infrastructure.Message, error) {
+func (s *broker) Subscribe(topic string) (<-chan port.Message, error) {
 	if nil == s.chsubs {
 		s.chsubs = make(chan *nats.Subscription)
 		s.subs = make(map[string]*nats.Subscription)
@@ -53,11 +53,11 @@ func (s *broker) Subscribe(topic string) (<-chan infrastructure.Message, error) 
 		s.chsubs <- v
 	}
 
-	ch := make(chan infrastructure.Message)
+	ch := make(chan port.Message)
 	go func() {
 		for {
 			msg := <-chmsg
-			ch <- infrastructure.Message{
+			ch <- port.Message{
 				Topic: msg.Subject,
 				Reply: msg.Reply,
 				Data:  msg.Data,
@@ -88,7 +88,7 @@ func (s broker) Request(topic string, message []byte, timeout time.Duration) ([]
 	}
 }
 
-func NewAsyncBroker(url string) (infrastructure.AsyncBroker, error) {
+func NewAsyncBroker(url string) (port.AsyncBroker, error) {
 	if conn, err := nats.Connect(url); err != nil {
 		return nil, err
 	} else {
@@ -96,7 +96,7 @@ func NewAsyncBroker(url string) (infrastructure.AsyncBroker, error) {
 	}
 }
 
-func NewSyncBroker(url string) (infrastructure.SyncBroker, error) {
+func NewSyncBroker(url string) (port.SyncBroker, error) {
 	if conn, err := nats.Connect(url); err != nil {
 		return nil, err
 	} else {

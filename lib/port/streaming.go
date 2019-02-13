@@ -1,4 +1,4 @@
-package infrastructure
+package port
 
 type Stream interface {
 	Send(b []byte) error

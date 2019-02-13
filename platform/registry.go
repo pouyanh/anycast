@@ -1,23 +1,23 @@
 package main
 
 import (
-	"github.com/pouyanh/anycast/lib/infrastructure"
 	"github.com/pouyanh/anycast/lib/logrus"
 	"github.com/pouyanh/anycast/lib/nats"
+	"github.com/pouyanh/anycast/lib/port"
 	"github.com/pouyanh/anycast/lib/redis"
 )
 
 type Registry struct {
-	Dictionary infrastructure.Dictionary
-	SyncBroker infrastructure.SyncBroker
-	AsyncBroker infrastructure.AsyncBroker
-	LevelledLogger infrastructure.LevelledLogger
+	Dictionary     port.Dictionary
+	SyncBroker     port.SyncBroker
+	AsyncBroker    port.AsyncBroker
+	LevelledLogger port.LevelledLogger
 }
 
 func SetupRegistry() (*Registry, error) {
 	registry := new(Registry)
 
-	if v, err := logrus.NewLevelledLogger(infrastructure.DEBUG); nil != err {
+	if v, err := logrus.NewLevelledLogger(port.DEBUG); nil != err {
 		return nil, err
 	} else {
 		registry.LevelledLogger = v

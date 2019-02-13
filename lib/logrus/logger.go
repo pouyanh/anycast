@@ -3,43 +3,43 @@ package logrus
 import (
 	"github.com/sirupsen/logrus"
 
-	"github.com/pouyanh/anycast/lib/infrastructure"
+	"github.com/pouyanh/anycast/lib/port"
 )
 
 type levelled struct {
 	logger *logrus.Logger
 }
 
-var lvlMap = map[infrastructure.LogLevel]logrus.Level{
-	infrastructure.FATAL: logrus.FatalLevel,
-	infrastructure.ERROR: logrus.ErrorLevel,
-	infrastructure.WARN:  logrus.WarnLevel,
-	infrastructure.INFO:  logrus.InfoLevel,
-	infrastructure.DEBUG: logrus.DebugLevel,
+var lvlMap = map[port.LogLevel]logrus.Level{
+	port.FATAL: logrus.FatalLevel,
+	port.ERROR: logrus.ErrorLevel,
+	port.WARN:  logrus.WarnLevel,
+	port.INFO:  logrus.InfoLevel,
+	port.DEBUG: logrus.DebugLevel,
 }
 
-func NewLevelledLogger(lvl infrastructure.LogLevel) (infrastructure.LevelledLogger, error) {
+func NewLevelledLogger(lvl port.LogLevel) (port.LevelledLogger, error) {
 	logger := logrus.New()
 	logger.Level = lvlMap[lvl]
 
 	return levelled{logger}, nil
 }
 
-func (s levelled) Log(level infrastructure.LogLevel, format string, v ...interface{}) {
+func (s levelled) Log(level port.LogLevel, format string, v ...interface{}) {
 	switch level {
-	case infrastructure.FATAL:
+	case port.FATAL:
 		s.logger.Fatalf(format, v...)
 
-	case infrastructure.ERROR:
+	case port.ERROR:
 		s.logger.Errorf(format, v...)
 
-	case infrastructure.WARN:
+	case port.WARN:
 		s.logger.Warnf(format, v...)
 
-	case infrastructure.INFO:
+	case port.INFO:
 		s.logger.Infof(format, v...)
 
-	case infrastructure.DEBUG:
+	case port.DEBUG:
 		s.logger.Debugf(format, v...)
 
 	default:

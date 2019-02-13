@@ -7,7 +7,7 @@ import (
 )
 
 func TestButler_RequestForHelp(t *testing.T) {
-	logger := infrastructure.MockLevelledLogger{}
+	logger := port.MockLevelledLogger{}
 
 	app := NewButler(&logger)
 	app.RequestForHelp()

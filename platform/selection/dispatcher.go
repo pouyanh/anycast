@@ -26,7 +26,7 @@ type workerPool struct {
 	wg     sync.WaitGroup
 
 	command application.Command
-	chmsg   <-chan infrastructure.Message
+	chmsg   <-chan port.Message
 }
 
 func (h *workerPool) Increase(count int) error {

@@ -1,4 +1,4 @@
-package infrastructure
+package port
 
 // Key/Value Storage
 type Dictionary interface {

@@ -8,7 +8,7 @@ import (
 
 func (a Application) SuggestRequest(location int) error {
 	a.Services.LevelledLogger.Log(
-		infrastructure.DEBUG,
+		port.DEBUG,
 		"Selection: Suggest Request called",
 	)
 
@@ -21,7 +21,7 @@ func (a Application) SuggestRequest(location int) error {
 
 func (a Application) DetermineVolunteering(name string) error {
 	a.Services.LevelledLogger.Log(
-		infrastructure.DEBUG,
+		port.DEBUG,
 		"Selection: Determine Volunteering called",
 	)
 

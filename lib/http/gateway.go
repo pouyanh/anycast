@@ -5,11 +5,11 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	"github.com/pouyanh/anycast/lib/infrastructure"
+	"github.com/pouyanh/anycast/lib/port"
 )
 
 type Gateway interface {
-	infrastructure.HttpMux
+	port.HttpMux
 
 	ListenAndServe() error
 	ListenAndServeTLS() error

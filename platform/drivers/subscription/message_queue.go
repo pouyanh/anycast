@@ -3,7 +3,7 @@ package subscription
 import (
 	"fmt"
 	"github.com/pouyanh/anycast/lib/application"
-	"github.com/pouyanh/anycast/lib/infrastructure"
+	"github.com/pouyanh/anycast/lib/port"
 	"github.com/pouyanh/anycast/platform/prosecution"
 )
 
@@ -12,7 +12,7 @@ type Subscription interface {
 }
 
 type subscription struct {
-	subscriber infrastructure.Subscriber
+	subscriber port.Subscriber
 	wps        map[string]application.WorkerPool
 }
 
