@@ -37,7 +37,7 @@ func main() {
 
 	// Attach the Drivers
 	if err := AttachDrivers(registry, btlr); nil != err {
-		panic(fmt.Errorf("error on drivers attach: %s", err))
+		panic(fmt.Errorf("drivers attachment failed: %s", err))
 	}
 
 	// Handle shutdown

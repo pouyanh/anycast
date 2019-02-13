@@ -8,8 +8,7 @@ import (
 )
 
 type Butler interface {
-	// Implementation of Prosecutor Port
-	RequestForHelp(hr prosecution.Petition) error
+	prosecution.Prosecutor
 }
 
 type butler struct {

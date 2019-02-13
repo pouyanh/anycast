@@ -1,1 +1,1 @@
-Services are driven ports
+Services are implementation of applications' driven ports
