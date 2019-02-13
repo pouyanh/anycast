@@ -5,6 +5,9 @@ import (
 	"github.com/pouyanh/anycast/lib/nats"
 	"github.com/pouyanh/anycast/lib/port"
 	"github.com/pouyanh/anycast/lib/redis"
+
+	"github.com/pouyanh/anycast/platform/prosecution"
+	"github.com/pouyanh/anycast/platform/services/repository"
 )
 
 type Registry struct {
@@ -12,6 +15,10 @@ type Registry struct {
 	SyncBroker     port.SyncBroker
 	AsyncBroker    port.AsyncBroker
 	LevelledLogger port.LevelledLogger
+
+	Repositories struct {
+		Servants prosecution.ServantRepository
+	}
 }
 
 func SetupRegistry() (*Registry, error) {
@@ -39,6 +46,10 @@ func SetupRegistry() (*Registry, error) {
 		return nil, err
 	} else {
 		registry.Dictionary = v
+	}
+
+	registry.Repositories.Servants = repository.OnlineServantRepository{
+		Dictionary: registry.Dictionary,
 	}
 
 	return registry, nil

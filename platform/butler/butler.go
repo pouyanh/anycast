@@ -18,11 +18,11 @@ type butler struct {
 
 func NewButler(
 	logger port.LevelledLogger,
-	srvrepo ServantRepository,
+	servants ServantRepository,
 ) Butler {
 	return &butler{
 		logger:   logger,
-		servants: srvrepo,
+		servants: servants,
 	}
 }
 

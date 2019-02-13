@@ -33,7 +33,7 @@ func main() {
 	}
 
 	// Create Applications
-	btlr := butler.NewButler(registry.LevelledLogger)
+	btlr := butler.NewButler(registry.LevelledLogger, registry.Repositories.Servants)
 
 	// Attach the Drivers
 	if err := AttachDrivers(registry, btlr); nil != err {
