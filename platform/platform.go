@@ -33,10 +33,10 @@ func main() {
 	}
 
 	// Create Applications
-	btlrapp := butler.NewButler(registry.LevelledLogger)
+	btlr := butler.NewButler(registry.LevelledLogger)
 
 	// Attach the Drivers
-	if err := AttachDrivers(registry, btlrapp); nil != err {
+	if err := AttachDrivers(registry, btlr); nil != err {
 		panic(fmt.Errorf("error on drivers attach: %s", err))
 	}
 

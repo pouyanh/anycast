@@ -7,10 +7,11 @@ import (
 
 	"github.com/pouyanh/anycast/lib/application"
 	"github.com/pouyanh/anycast/lib/infrastructure"
+	"github.com/pouyanh/anycast/platform/prosecution"
 )
 
 type Prosecutor interface {
-	RequestForHelp(pt Petition) error
+	RequestForHelp(pt prosecution.Petition) error
 }
 
 const (
@@ -162,7 +163,7 @@ func (wp *rfhwp) work() {
 				return
 			}
 
-			var v Petition
+			var v prosecution.Petition
 			if err := json.Unmarshal(msg.Data, &v); nil != err {
 				// TODO: Inform about input error
 			} else if err := wp.app.RequestForHelp(v); nil != err {

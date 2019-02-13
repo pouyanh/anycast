@@ -4,10 +4,12 @@ import (
 	"fmt"
 
 	"github.com/pouyanh/anycast/lib/infrastructure"
+	"github.com/pouyanh/anycast/platform/prosecution"
 )
 
 type Butler interface {
-	RequestForHelp(hr HelpRequest) error
+	// Implementation of Prosecutor Port
+	RequestForHelp(hr prosecution.Petition) error
 }
 
 type butler struct {
@@ -20,11 +22,7 @@ func NewButler(logger infrastructure.LevelledLogger) Butler {
 	}
 }
 
-type HelpRequest struct {
-
-}
-
-func (app butler) RequestForHelp(hr HelpRequest) error {
+func (app butler) RequestForHelp(petition prosecution.Petition) error {
 	app.logger.Log(infrastructure.DEBUG, "%s command called", "RequestForHelp")
 
 	return fmt.Errorf("not implemented")
