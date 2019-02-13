@@ -7,8 +7,11 @@ import (
 
 	"github.com/pouyanh/anycast/lib/application"
 	"github.com/pouyanh/anycast/lib/infrastructure"
-	"github.com/pouyanh/anycast/platform/butler"
 )
+
+type Prosecutor interface {
+	RequestForHelp(pt Petition) error
+}
 
 const (
 	REQUEST_FOR_HELP string = "request_for_help"
@@ -18,13 +21,13 @@ type Subscription interface {
 	Shutdown() error
 }
 
-func Bind(subscriber infrastructure.Subscriber, butler butler.Butler) (Subscription, error) {
+func BindProsecutor(subscriber infrastructure.Subscriber, app Prosecutor) (Subscription, error) {
 	mq := &subscription{
-		app: butler,
+		app:        app,
 		subscriber: subscriber,
 	}
 
-	if wp, err := mq.HireWorkers(REQUEST_FOR_HELP); nil != err{
+	if wp, err := mq.HireWorkers(REQUEST_FOR_HELP); nil != err {
 		return nil, fmt.Errorf("worker assignment failed: %s", err)
 	} else if err := wp.Increase(100); nil != err {
 		return nil, fmt.Errorf("worker allocation failed: %s", err)
@@ -34,9 +37,9 @@ func Bind(subscriber infrastructure.Subscriber, butler butler.Butler) (Subscript
 }
 
 type subscription struct {
-	app butler.Butler
+	app        Prosecutor
 	subscriber infrastructure.Subscriber
-	wps map[string]application.WorkerPool
+	wps        map[string]application.WorkerPool
 }
 
 func (mq *subscription) Shutdown() error {
@@ -77,7 +80,7 @@ func (mq *subscription) HireWorkers(topic string) (application.WorkerPool, error
 		switch topic {
 		case REQUEST_FOR_HELP:
 			wp = &rfhwp{
-				app: mq.app,
+				app:   mq.app,
 				chmsg: chmsg,
 			}
 
@@ -107,7 +110,7 @@ func (mq *subscription) FireWorkers(topic string) error {
 type rfhwp struct {
 	count uint64 // Number of currently working workers
 
-	app butler.Butler
+	app Prosecutor
 
 	// Receive only channel of incoming messages
 	chmsg <-chan infrastructure.Message
@@ -159,8 +162,8 @@ func (wp *rfhwp) work() {
 				return
 			}
 
-		  var v butler.HelpRequest
-		  if err := json.Unmarshal(msg.Data, &v); nil != err {
+			var v Petition
+			if err := json.Unmarshal(msg.Data, &v); nil != err {
 				// TODO: Inform about input error
 			} else if err := wp.app.RequestForHelp(v); nil != err {
 				// TODO: Inform about job error
