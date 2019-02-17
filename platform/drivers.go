@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/pouyanh/anycast/platform/drivers/subscription"
+	"github.com/pouyanh/anycast/platform/driver/subscription"
 	"github.com/pouyanh/anycast/platform/prosecution"
 )
 

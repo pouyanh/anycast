@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/pouyanh/anycast/platform/butler"
+	"github.com/pouyanh/anycast/platform/qualifier"
 )
 
 var (
@@ -33,7 +34,8 @@ func main() {
 	}
 
 	// Create Applications
-	btlr := butler.NewButler(registry.LevelledLogger, registry.Repositories.Servants)
+	qa := qualifier.NewQualifier(registry.LevelledLogger)
+	btlr := butler.NewButler(registry.LevelledLogger, registry.Repositories.Servants, qa)
 
 	// Attach the Drivers
 	if err := AttachDrivers(registry, btlr); nil != err {

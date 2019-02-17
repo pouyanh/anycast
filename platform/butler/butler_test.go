@@ -3,9 +3,9 @@ package butler
 import (
 	"testing"
 
+	"github.com/pouyanh/anycast/platform/driven/logger"
+	"github.com/pouyanh/anycast/platform/driven/repository"
 	"github.com/pouyanh/anycast/platform/prosecution"
-	"github.com/pouyanh/anycast/platform/services/logger"
-	"github.com/pouyanh/anycast/platform/services/repository"
 )
 
 func TestButler_RequestForHelp(t *testing.T) {

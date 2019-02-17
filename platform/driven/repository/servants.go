@@ -2,7 +2,8 @@ package repository
 
 import (
 	"fmt"
-	"github.com/pouyanh/anycast/lib/port"
+
+	"github.com/pouyanh/anycast/lib/actor"
 	"github.com/pouyanh/anycast/platform/prosecution"
 )
 
@@ -38,7 +39,7 @@ func (repo InMemoryServantRepository) FindByLocation(location prosecution.Point)
 }
 
 type RelationalServantRepository struct {
-	DB port.RelationalDatabase
+	DB actor.RelationalDatabase
 }
 
 func (repo RelationalServantRepository) Add(servant prosecution.Servant) error {
@@ -66,7 +67,7 @@ func (repo RelationalServantRepository) FindByLocation(location prosecution.Poin
 }
 
 type OnlineServantRepository struct {
-	Dictionary port.Dictionary
+	Dictionary actor.Dictionary
 }
 
 func (repo OnlineServantRepository) Add(servant prosecution.Servant) error {

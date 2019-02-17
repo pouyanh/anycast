@@ -1,4 +1,4 @@
-package port
+package actor
 
 type Stream interface {
 	Send(b []byte) error

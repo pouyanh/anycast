@@ -6,7 +6,7 @@ import (
 	"io"
 	"testing"
 
-	"github.com/pouyanh/anycast/lib/port"
+	"github.com/pouyanh/anycast/lib/actor"
 )
 
 func TestMockLevelledLogger_Read(t *testing.T) {
@@ -23,7 +23,7 @@ func TestMockLevelledLogger_Read(t *testing.T) {
 	length = 9
 	compiled = fmt.Sprintf(format, args...)
 
-	go logger.Log(port.FATAL, format, args...)
+	go logger.Log(actor.FATAL, format, args...)
 	for i := int64(0); i < int64(len(compiled)) / length; i++ {
 		if n, err := io.CopyN(buf, logger, length); 0 == n || nil != err {
 			t.Errorf("Read error: %s", err)

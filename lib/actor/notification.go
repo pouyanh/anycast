@@ -1,4 +1,4 @@
-package port
+package actor
 
 type EmailSender interface {
 	SendEmail() error

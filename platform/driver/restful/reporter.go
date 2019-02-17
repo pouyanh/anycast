@@ -3,13 +3,13 @@ package restful
 import (
 	"fmt"
 
-	"github.com/pouyanh/anycast/lib/port"
+	"github.com/pouyanh/anycast/lib/actor"
 )
 
 type Reporter interface {
 
 }
 
-func BindReporter(mux port.HttpMux, reporter Reporter) error {
+func BindReporter(mux actor.HttpMux, reporter Reporter) error {
 	return fmt.Errorf("not implemented")
 }

@@ -4,16 +4,16 @@ import (
 	"bytes"
 	"fmt"
 
-	"github.com/pouyanh/anycast/lib/port"
+	"github.com/pouyanh/anycast/lib/actor"
 )
 
 type MockLevelledLogger struct {
-	Level port.LogLevel
+	Level actor.LogLevel
 
 	buffer *bytes.Buffer
 }
 
-func (l *MockLevelledLogger) Log(level port.LogLevel, format string, v ...interface{}) {
+func (l *MockLevelledLogger) Log(level actor.LogLevel, format string, v ...interface{}) {
 	if nil == l.buffer {
 		l.buffer = new(bytes.Buffer)
 	}

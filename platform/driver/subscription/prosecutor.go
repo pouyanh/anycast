@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"sync/atomic"
 
-	"github.com/pouyanh/anycast/lib/port"
+	"github.com/pouyanh/anycast/lib/actor"
 	"github.com/pouyanh/anycast/platform/prosecution"
 )
 
@@ -13,7 +13,7 @@ const (
 	REQUEST_FOR_HELP string = "request_for_help"
 )
 
-func BindProsecutor(subscriber port.Subscriber, prosecutor prosecution.Prosecutor) (Subscription, error) {
+func BindProsecutor(subscriber actor.Subscriber, prosecutor prosecution.Prosecutor) (Subscription, error) {
 	mq := &subscription{
 		subscriber: subscriber,
 	}
@@ -34,7 +34,7 @@ type rfhwp struct {
 	count uint64 // Number of currently working workers
 
 	// Receive only channel of incoming messages
-	chmsg <-chan port.Message
+	chmsg <-chan actor.Message
 
 	// Stop channel
 	chstop chan bool

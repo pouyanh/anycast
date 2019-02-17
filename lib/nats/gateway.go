@@ -6,11 +6,11 @@ import (
 	"net/http"
 
 	"github.com/nats-io/go-nats"
-	"github.com/pouyanh/anycast/lib/port"
+	"github.com/pouyanh/anycast/lib/actor"
 )
 
 type Gateway interface {
-	port.HttpMux
+	actor.HttpMux
 
 	Unhandle(pattern string)
 }
